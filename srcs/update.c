@@ -24,8 +24,8 @@ void	update_map(t_pmContext *gContext)
 	if (gContext->map[p_y][p_x] == '.')
 	{
 		gContext->map[p_y][p_x] = ' ';
-		if (SDLX_XboxController_link(0) != NULL)
-			SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
+		// if (SDLX_XboxController_link(0) != NULL)
+		// 	SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
 	}
 	if (gContext->map[p_y][p_x] == 'P')
 	{
@@ -48,8 +48,8 @@ void	update_map(t_pmContext *gContext)
 	if (gContext->map[p_y][p_x] == '.' && gContext->clone)
 	{
 		gContext->map[p_y][p_x] = ' ';
-		if (SDLX_XboxController_link(0) != NULL)
-			SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
+		// if (SDLX_XboxController_link(0) != NULL)
+		// 	SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
 	}
 
 	if (gContext->fright_ticks > 0)

@@ -1,12 +1,17 @@
-NAME = pacman
+NAME = index.html
 
 MEM_CHECK = -fsanitize=address
 FLAGS = -Wall -Wextra -Werror
 
-INCLUDES = -I includes/ -I includes/includes_SDL2/
+INCLUDES = -I includes/
+LIBRARIES = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS="['png']"
+SKELE_HTML = --shell-file srcs/skeleton.html
 
-LIB_DIR = libs/
-LIBRARIES = $(LIB_DIR)libSDL2.dylib $(LIB_DIR)libSDL2_image.dylib
+PRELOAD_FILES =							\
+	assets/
+
+
+PRELOAD = --preload-file $(PRELOAD_FILES)
 
 SDLX_DIR = SDLX/
 SRCS_DIR = srcs/
@@ -19,8 +24,8 @@ SRCS_NAMES =		\
 	extra_texture	\
 	ghost_sprite	\
 	ghost			\
-	main 			\
 	input			\
+	main 			\
 	map				\
 	player			\
 	update			\
@@ -33,18 +38,16 @@ SDLX_NAMES = 			\
 	SDLX_render_queue	\
 	SDLX_render			\
 	SDLX_utils			\
-	SDLX_xbox			\
 
 C_FILES =				\
 	$(SRCS_NAMES) 		\
 
-SRCS = $(addsuffix .c, $(addprefix $(SRCS_DIR), $(C_FILES)))
-OBJS = $(addprefix $(BIN_DIR), $(SRCS:.c=.o))
+SRCS = $(addsuffix .c, $(addprefix srcs/, $(C_FILES)))
 
 all: $(NAME)
 
-$(NAME): $(BIN_DIR) $(OBJS)
-	gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(SRCS) $(LIBRARIES)
+$(NAME):
+	emcc $(FLAGS) $(INCLUDES) $(LIBRARIES) $(PRELOAD) $(SRCS) $(SKELE_HTML) -o $(NAME)
 
 run: all
 	./$(NAME)

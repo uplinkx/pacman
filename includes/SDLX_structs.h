@@ -118,7 +118,7 @@ typedef struct	SDLX_GameInput
 	}	GameInput;
 }				SDLX_GameInput;
 
-SDLX_GameInput	g_GameInput;
+extern SDLX_GameInput	g_GameInput;
 
 #define BMAP(button) (g_GameInput.GameInput.button)
 

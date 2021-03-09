@@ -13,6 +13,8 @@
 
 #include "SDLX.h"
 
+SDLX_GameInput	g_GameInput;
+
 void	SDLX_KeyMap(SDLX_input_mapper *key_map, const Uint8 *keystate)
 {
 	size_t i;

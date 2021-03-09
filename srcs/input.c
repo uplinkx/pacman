@@ -63,11 +63,11 @@ void	init_input_mappers(void)
 
 SDL_bool	input_entry(SDLX_GameInput *game_input)
 {
-	SDL_GameController	*controller;
+	// SDL_GameController	*controller;
 	const Uint8			*keystate;
 	SDL_Event	event;
 	SDL_bool	exit;
-	int			pad;
+	// int			pad;
 
 	exit = SDL_FALSE;
 	/* Or do a memcpy of a previous saved input state here */
@@ -85,17 +85,17 @@ SDL_bool	input_entry(SDLX_GameInput *game_input)
 	keystate = SDL_GetKeyboardState(NULL);
 	SDLX_KeyMap(&(game_input->key_mapper), keystate);
 
-	controller = SDLX_XboxController_link(0);
-	if (controller != NULL)
-	{
-		SDLX_ControllerMap(&(game_input->pad_mapper), controller);
-		SDLX_FillXbox_Axis(game_input, controller);
+	// controller = SDLX_XboxController_link(0);
+	// if (controller != NULL)
+	// {
+	// 	SDLX_ControllerMap(&(game_input->pad_mapper), controller);
+	// 	SDLX_FillXbox_Axis(game_input, controller);
 
-		pad = SDLX_AxisConvert(&(game_input->GameInput.leftaxis));
-		SDLX_toDPAD(game_input, pad);
-		pad = SDLX_AxisConvert(&(game_input->GameInput.rightaxis));
-		SDLX_toDPAD(game_input, pad);
-	}
+	// 	pad = SDLX_AxisConvert(&(game_input->GameInput.leftaxis));
+	// 	SDLX_toDPAD(game_input, pad);
+	// 	pad = SDLX_AxisConvert(&(game_input->GameInput.rightaxis));
+	// 	SDLX_toDPAD(game_input, pad);
+	// }
 
 	return (exit);
 }
