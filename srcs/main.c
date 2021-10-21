@@ -19,16 +19,18 @@
 
 void	pacman_initalize(t_pmContext *gContext)
 {
-	gContext->ticks = 0;
+	gContext->init_fn = level_init;
+	gContext->update_fn = NULL;
+	gContext->close_fn = NULL;
 
-	init_input_mappers();
-
-	srand(0x9AC533D);
+	gContext->meta = NULL;
 
 	gContext->shouldQuit = SDL_FALSE;
 	gContext->shouldChange = SDL_TRUE;
 
-	gContext->init_fn = level_init;
+	g_GameInput.key_mapper.map_arr = pacman_key_map(&(g_GameInput.key_mapper.amount));
+	g_GameInput.pad_mapper.map_arr = pacman_pad_map(&(g_GameInput.pad_mapper.amount));
+	srand(0x9AC533D);
 }
 
 void	main_loop(void *v_cxt)
@@ -42,18 +44,19 @@ void	main_loop(void *v_cxt)
 		gContext->shouldChange = SDL_FALSE;
 	}
 
-	gContext->shouldQuit = input_entry(&(g_GameInput));
+	SDLX_record_input(NULL);
+	gContext->shouldQuit = SDLX_poll();
+	SDLX_KeyMap(&(g_GameInput.key_mapper), g_GameInput.keystate);
 	if (gContext->shouldQuit == SDL_TRUE)
 		return ;
 
 	gContext->update_fn(gContext, gContext->meta);
 
-	if (gContext->shouldQuit != SDL_TRUE && SDLX_discrete_frames(&(gContext->ticks)) != EXIT_FAILURE)
+	if (gContext->shouldQuit != SDL_TRUE && SDLX_discrete_frames(NULL) != EXIT_FAILURE)
 	{
 		SDLX_RenderQueue_Flush(NULL, SDLX_GetDisplay()->renderer, SDL_TRUE);
 		SDLX_ScreenReset(SDLX_GetDisplay()->renderer, NULL);
 	}
-	gContext->rQueue.index = 0;
 }
 
 #include <stdio.h>
@@ -63,7 +66,6 @@ int	main(void)
 	t_pmContext	gContext;
 
 	SDLX_GetDisplay();
-	printf("Testing\n");
 	pacman_initalize(&(gContext));
 
 #ifdef EMCC

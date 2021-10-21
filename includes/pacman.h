@@ -23,8 +23,8 @@
 
 void	*new_scene(size_t size, t_pmContext *context, char *background_path, void *(close)(t_pmContext *, void *), void *(update)(t_pmContext *, void *));
 
-SDL_bool	input_entry(SDLX_GameInput *game_input);
-void		init_input_mappers(void);
+SDLX_iMap	*pacman_key_map(size_t *size);
+SDLX_iMap	*pacman_pad_map(size_t *size);
 
 void		instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *));
 void		update_ghost(t_level_scene *scene, t_ghost *ghost);

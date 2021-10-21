@@ -242,7 +242,7 @@ void	update_ghost(t_level_scene *scene, t_ghost *ghost)
 	else if (ghost->mode == GM_CHASE)
 	{
 		ghost->ghost_target(scene);
-		if ((*scene->ticks) % 4 != 1)
+		if (scene->ticks % 4 != 1)
 			move_ghost(ghost, scene->map);
 		if (ghost_player_collision(ghost, &(scene->player)) && scene->player.dead != SDL_TRUE)
 		{

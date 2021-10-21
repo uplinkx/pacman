@@ -30,6 +30,7 @@ SDLX_Display	*SDLX_GetDisplay(void);
 void			SDLX_ScreenReset(SDL_Renderer *renderer, SDL_Color *bg_color);
 SDLX_Sprite		*SDLX_GetBackground(void);
 void			SDLX_SetBackground(SDLX_Sprite *src);
+SDLX_Sprite		*SDLX_ClearBackground(void);
 
 SDL_Texture		*SDLX_CaptureScreen(SDLX_RenderQueue **Queues, size_t amount, SDL_bool reverse);
 

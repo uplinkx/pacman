@@ -75,9 +75,7 @@ typedef void *(t_scene_fn)(struct s_pmContext *, void *);
 
 typedef struct	s_pmContext
 {
-	int					ticks;
-	SDLX_Sprite			background;
-	SDLX_RenderQueue	rQueue;
+	SDLX_Sprite	background;
 
 	t_scene_fn	*init_fn;
 	t_scene_fn	*update_fn;
@@ -85,41 +83,23 @@ typedef struct	s_pmContext
 
 	void		*meta;
 
-	SDL_bool			shouldChange;
-	SDL_bool			shouldQuit;
-
-
-	// SDLX_Sprite	background;
-	// t_map		map;
-
-	// int				fright_ticks;
-	// t_ghost			blinky;
-	// t_ghost			pinky;
-	// t_ghost			inky;
-	// t_ghost			clyde;
-
-	// t_pacman			player;
-	// SDL_bool			pause;
-
-	SDLX_GameInput		game_in;
-
-
+	SDL_bool	shouldChange;
+	SDL_bool	shouldQuit;
 }				t_pmContext;
 
 typedef struct	s_level_scene
 {
-	SDLX_Sprite	background;
+	int			ticks;
+	int			fright_ticks;
 	t_map		map;
-	int			*ticks;
 
-	int				fright_ticks;
-	t_ghost			blinky;
-	t_ghost			pinky;
-	t_ghost			inky;
-	t_ghost			clyde;
+	t_ghost		blinky;
+	t_ghost		pinky;
+	t_ghost		inky;
+	t_ghost		clyde;
 
-	t_pacman			player;
-	SDL_bool			pause;
-	SDL_bool			clone;
+	t_pacman	player;
+	SDL_bool	pause;
+	SDL_bool	clone;
 
 }				t_level_scene;

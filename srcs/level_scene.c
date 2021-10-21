@@ -19,10 +19,8 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 
 	scene = new_scene(sizeof(*scene), context, NULL, level_close, level_update);
 
+	scene->ticks = 0;
 	fill_map(&(scene->map));
-
-	init_BackgrundSprite(&(scene->background));
-	SDLX_SetBackground(&(scene->background));
 
 	instance_ghost(&(scene->blinky),	SD_BLINKY | SD_GHOST_RIGHT, 12, 11, target_blinky);
 	instance_ghost(&(scene->pinky),		SD_PINKY  | SD_GHOST_RIGHT, 12, 11, target_pinky);
@@ -36,12 +34,13 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 	instance_player(&(scene->player), 14, 23);
 	scene->player.map = &(scene->map);
 
-	scene->clone = SDL_FALSE;
 	scene->pause = SDL_FALSE;
+	scene->clone = SDL_FALSE;
 
-	scene->ticks = &(context->ticks);
 
-	(void)context;
+	context->background = SDLX_Sprite_Static(ASSETS"pacman_background.png");
+	SDLX_SetBackground(&(context->background));
+
 	(void)vp_scene;
 	return (NULL);
 }
@@ -83,13 +82,12 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 		update_ghost(scene, &(scene->inky));
 		update_ghost(scene, &(scene->clyde));
 
-		update_player(context->ticks, &(scene->player));
+		update_player(scene->ticks, &(scene->player));
 
 		update_map(scene);
 	}
 	draw_pellets(&(scene->map));
+	scene->ticks++;
 
-	(void)context;
-	(void)vp_scene;
 	return (NULL);
 }
