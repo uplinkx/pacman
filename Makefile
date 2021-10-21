@@ -1,61 +1,107 @@
-NAME = index.html
+NAME = pacman
+NAMEW = index.html
+# FLAGS = -Wall -Wextra -Werror
+# FLAGS = -Wall -Wextra -Werror -O2
+FLAGS = -Wall -Wextra -Werror -fsanitize=address
+INCLUDES = -I includes/ -I includes/SDLX/
 
-MEM_CHECK = -fsanitize=address
-FLAGS = -Wall -Wextra -Werror
+LIBRARIES = -s USE_SDL=2 -s USE_SDL_TTF=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS="['png']"
+SKELE_HTML = --shell-file skeleton.html
 
-INCLUDES = -I includes/
-LIBRARIES = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS="['png']"
-SKELE_HTML = --shell-file srcs/skeleton.html
+SDL_LIB = -L ~/.brew/lib -l SDL2 -l sdl2_image -l SDL2_ttf
 
-PRELOAD_FILES =							\
+PRELOAD_FILES =	\
 	assets/
-
 
 PRELOAD = --preload-file $(PRELOAD_FILES)
 
 SDLX_DIR = SDLX/
-SRCS_DIR = srcs/
-
+SRC_DIR = srcs/
 BIN_DIR = bin/
-
-SRCS_NAMES =		\
-	$(addprefix $(SDLX_DIR), $(SDLX_NAMES))		\
-	background		\
-	extra_texture	\
-	ghost_sprite	\
-	ghost			\
-	input			\
-	main 			\
-	map				\
-	player			\
-	update			\
 
 SDLX_NAMES = 			\
 	SDLX_background		\
+	SDLX_button_loop	\
+	SDLX_button			\
+	SDLX_collide		\
+	SDLX_collisions		\
 	SDLX_init			\
 	SDLX_input			\
 	SDLX_ticks			\
+	SDLX_math			\
 	SDLX_render_queue	\
 	SDLX_render			\
 	SDLX_utils			\
+	SDLX_utilsX			\
+	SDLX_xbox			\
 
-C_FILES =				\
-	$(SRCS_NAMES) 		\
+# List of all the source files.
+SRC_NAMES = \
+	$(addprefix $(SDLX_DIR), $(SDLX_NAMES))	\
+	background \
+	extra_texture \
+	ghost_sprite \
+	ghost \
+	input \
+	main \
+	map \
+	player \
+	update \
 
-SRCS = $(addsuffix .c, $(addprefix srcs/, $(C_FILES)))
 
-all: $(NAME)
+# List of all the source files, folders are to be added by
+# including a $(addprefix, DIR_NAME, $(DIR_FILES))
+FILE_NAMES = \
+	$(SRC_NAMES) \
 
-$(NAME):
-	emcc $(FLAGS) $(INCLUDES) $(LIBRARIES) $(PRELOAD) $(SRCS) $(SKELE_HTML) -o $(NAME)
+SRCS = $(addsuffix .c, $(addprefix $(SRC_DIR), $(FILE_NAMES)))
+# Object files will be built to BIN_DIR. They will build the
+# structure/ path tree that the SRC_DIR has.
+OBJS = $(addprefix $(BIN_DIR), $(SRCS:.c=.o))
 
-run: all
-	./$(NAME)
+all:
+	make -j $(NAME)
+
+allw:
+	emcc -Wall -Wextra -Werror -O0 $(INCLUDES) -D EMCC $(LIBRARIES) $(PRELOAD) $(SRCS) $(SKELE_HTML) -o $(NAMEW)
+
+$(NAME): $(BIN_DIR) $(OBJS)
+	@gcc $(FLAGS) $(INCLUDES) -o $(NAME) $(OBJS) $(SDL_LIB)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+# These are the target object file names given by path ($(OBJS)).
+# We will create the required directories with mkdir -p.
+$(BIN_DIR)%.o: %.c
+	@mkdir -p $(BIN_DIR)$(dir $<)
+	@gcc $(FLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -rf $(NAME)
+
+# Ensure that when git add is done the repo is cleaned out.
+save: fclean
+	git add .
+	git commit -m "$(MSG)"
+	git push
 
 re: fclean all
+
+rew:
+	rm -f ../index.data
+	rm -f ../index.html
+	rm -f ../index.js
+	rm -f ../index.wasm
+	make allw
+
+run:
+	rm -f $(NAME)
+	make -j all
+	clear
+	@echo "\033[1m\033[32m$(NAME)\033[0m"
+	@./$(NAME)
+

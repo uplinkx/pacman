@@ -88,4 +88,6 @@ typedef struct	s_pmContext
 	SDL_bool			clone;
 	SDL_bool			pause;
 
+	SDL_bool			shouldQuit;
+
 }				t_pmContext;

@@ -19,7 +19,7 @@ void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_
 	fetch_GhostSpriteInfo(&(dest->sprite.sprite_data), ghost);
 	SDLX_new_Sprite(&(dest->sprite));
 
-	dest->sprite._dst = (SDL_Rect){0, 0, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
+	dest->sprite._dst = (SDL_Rect){0, 0, 16, 16};
 
 	dest->x = x;
 	dest->y = y;
@@ -33,8 +33,8 @@ void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_
 
 void	realign_ghost(t_ghost *ghost)
 {
-	ghost->sprite.dst->x = (4 + ((ghost->x - 1) * 8)) * DISPLAY_SCALE;
-	ghost->sprite.dst->y = (4 + ((ghost->y - 1) * 8)) * DISPLAY_SCALE;
+	ghost->sprite.dst->x = (4 + ((ghost->x - 1) * 8));
+	ghost->sprite.dst->y = (4 + ((ghost->y - 1) * 8));
 }
 
 void	target_blinky(t_pmContext *gContext)
@@ -270,5 +270,5 @@ void	update_ghost(t_pmContext *gContext, t_ghost *ghost)
 
 	realign_ghost(ghost);
 	ghost->sprite.current++;
-	SDLX_RenderQueue_add(&(gContext->rQueue), &(ghost->sprite));
+	SDLX_RenderQueue_Add(&(gContext->rQueue), &(ghost->sprite));
 }

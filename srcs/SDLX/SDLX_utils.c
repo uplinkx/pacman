@@ -35,3 +35,40 @@ SDLX_Sprite		*SDLX_new_Sprite(SDLX_Sprite *dst)
 
 	return (dst);
 }
+
+void			SDLX_Mouse_to_Screen(int *x, int *y)
+{
+	(*x) /= DISPLAY_SCALE;
+	(*y) /= DISPLAY_SCALE;
+}
+
+# define SDLX_LRED	"\033[31m"
+
+SDL_Texture		*SDLX_LoadTexture(char *path)
+{
+	SDL_Texture	*res;
+
+	res = IMG_LoadTexture(SDLX_GetDisplay()->renderer, path);
+	if (res == NULL)
+		SDL_Log(SDLX_LRED"Did not load texture from file: %s", path);
+
+	return (res);
+}
+
+SDLX_Sprite		SDLX_Sprite_Static(char *path)
+{
+	SDLX_Sprite	res;
+
+	SDLX_new_Sprite(&(res));
+	res.sprite_data = SDL_calloc(1, sizeof(*(res.sprite_data)));
+	res.sprite_data->texture = SDLX_LoadTexture(path);
+	res.sprite_data[0].src = NULL;
+	res.sprite_data[0].cycle = 1;
+
+	res.dst = NULL;
+
+	return (res);
+}
+
+double	SDLX_Degree_to_Radian(double degree) { return (degree * M_PI / 180 ); }
+double	SDLX_Radian_to_Degree(double degree) { return (degree * 180 / M_PI + 90); }

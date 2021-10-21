@@ -57,7 +57,7 @@ void	draw_pellets(t_map map)
 
 	SDLX_new_Sprite(&pellet);
 	fetch_ExtraSpriteInfo(&(pellet.sprite_data), 0);
-	pellet._dst = (SDL_Rect){0, 0, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
+	pellet._dst = (SDL_Rect){0, 0, 16, 16};
 
 	i = 0;
 	while (i < GAME_ROWS)
@@ -67,9 +67,9 @@ void	draw_pellets(t_map map)
 		{
 			if (map[i][j] == '.')
 			{
-				pellet._dst.y = (i * 8 - 3) * DISPLAY_SCALE;
-				pellet._dst.x = (j * 8 - 3) * DISPLAY_SCALE;
-				SDLX_draw_animation(SDLX_GetDisplay()->renderer, &(pellet));
+				pellet._dst.y = (i * 8 - 3);
+				pellet._dst.x = (j * 8 - 3);
+				SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet));
 			}
 			j++;
 		}
@@ -77,12 +77,12 @@ void	draw_pellets(t_map map)
 	}
 
 	fetch_ExtraSpriteInfo(&(pellet.sprite_data), 2);
-	pellet._dst = (SDL_Rect){1 * 8 * DISPLAY_SCALE - 8, 3 * 8 * DISPLAY_SCALE - 8, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
-	if (map[3][1] == 'P')	{ SDLX_draw_animation(SDLX_GetDisplay()->renderer, &(pellet)); }
-	pellet._dst = (SDL_Rect){26 * 8 * DISPLAY_SCALE - 8, 3 * 8 * DISPLAY_SCALE - 8, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
-	if (map[3][26] == 'P')	{ SDLX_draw_animation(SDLX_GetDisplay()->renderer, &(pellet)); }
-	pellet._dst = (SDL_Rect){1 * 8 * DISPLAY_SCALE - 8, 23 * 8 * DISPLAY_SCALE - 8, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
-	if (map[23][1] == 'P')	{ SDLX_draw_animation(SDLX_GetDisplay()->renderer, &(pellet)); }
-	pellet._dst = (SDL_Rect){26 * 8 * DISPLAY_SCALE - 8, 23 * 8 * DISPLAY_SCALE - 8, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
-	if (map[23][26] == 'P')	{ SDLX_draw_animation(SDLX_GetDisplay()->renderer, &(pellet)); }
+	pellet._dst = (SDL_Rect){1 * 8 - 3, 3 * 8 - 3, 16, 16};
+	if (map[3][1] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
+	pellet._dst = (SDL_Rect){26 * 8 - 3, 3 * 8 - 3, 16, 16};
+	if (map[3][26] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
+	pellet._dst = (SDL_Rect){1 * 8 - 3, 23 * 8 - 3, 16, 16};
+	if (map[23][1] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
+	pellet._dst = (SDL_Rect){26 * 8 - 3, 23 * 8 - 3, 16, 16};
+	if (map[23][26] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
 }

@@ -6,7 +6,7 @@
 # define WIN_TITLE "PacMan"
 # define WIN_WIDTH  (224 * DISPLAY_SCALE)
 # define WIN_HEIGHT (288 * DISPLAY_SCALE)
-# define WIN_POS_X 4200
-# define WIN_POS_Y 100
+# define WIN_POS_X	(4200)
+# define WIN_POS_Y	(100)
 
 # endif

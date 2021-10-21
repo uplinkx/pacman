@@ -13,8 +13,6 @@
 
 #include "SDLX.h"
 
-SDLX_GameInput	g_GameInput;
-
 void	SDLX_KeyMap(SDLX_input_mapper *key_map, const Uint8 *keystate)
 {
 	size_t i;
@@ -69,6 +67,26 @@ void	SDLX_toDPAD(SDLX_GameInput *game_input, int set)
 	if (set == SDL_CONTROLLER_BUTTON_DPAD_RIGHT)	game_input->GameInput.button_DPAD_RIGHT	= 1;
 }
 
+void	SDLX_GameInput_Mouse_Fill(SDLX_GameInput *dst, SDL_bool convert)
+{
+	Uint32	mouse_click;
+
+	mouse_click = SDL_GetMouseState(&(dst->GameInput.primary.x), &(dst->GameInput.primary.y));
+	SDL_GetRelativeMouseState(&(dst->GameInput.primary_delta.x), &(dst->GameInput.primary_delta.y));
+
+	if (convert == SDL_TRUE)
+	{
+		SDLX_Mouse_to_Screen(&(dst->GameInput.primary.x), &(dst->GameInput.primary.y));
+		// SDLX_Mouse_to_Screen(&(dst->GameInput.primary_delta.x), &(dst->GameInput.primary_delta.y));
+	}
+
+	if (SDL_BUTTON(mouse_click) & SDL_BUTTON_LMASK)
+		dst->GameInput.button_primleft = SDL_TRUE;
+	else if (SDL_BUTTON(mouse_click) & SDL_BUTTON_RMASK)
+		dst->GameInput.button_primright = SDL_TRUE;
+
+}
+
 SDL_bool	SDLX_poll(void)
 {
 	SDL_bool	exit;
@@ -84,5 +102,15 @@ SDL_bool	SDLX_poll(void)
 			return (exit);
 		}
 	}
+	g_GameInput.keystate = SDL_GetKeyboardState(NULL);
 	return (exit);
+}
+
+void	SDLX_record_input(SDLX_GameInput *from)
+{
+	if (from == NULL)
+		from = &(g_GameInput);
+
+	g_GameInput_prev = *(from);
+	SDL_memset(&(from->GameInput), 0, sizeof((from->GameInput)));
 }

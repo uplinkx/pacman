@@ -19,6 +19,6 @@ SDLX_Sprite	**SDLX_internal_background(void)
 	return (&(background));
 }
 
-SDLX_Sprite	*SDLX_get_background(void) { return (*SDLX_internal_background()); }
+SDLX_Sprite	*SDLX_GetBackground(void) { return (*SDLX_internal_background()); }
 
-void		SDLX_set_background(SDLX_Sprite *src) { *SDLX_internal_background() = src; }
+void		SDLX_SetBackground(SDLX_Sprite *src) { *SDLX_internal_background() = src; }

@@ -99,11 +99,11 @@ void	instance_player(t_pacman *player, int x, int y)
 
 	SDLX_new_Sprite(&(player->sprite));
 	fetch_PacManSpriteInfo(&(player->sprite.sprite_data), SD_PACMAN_UP);
-	player->sprite._dst = (SDL_Rect){0, 0, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
+	player->sprite._dst = (SDL_Rect){0, 0, 16, 16};
 
 	SDLX_new_Sprite(&(player->sprite_i));
 	fetch_PacManSpriteInfo(&(player->sprite_i.sprite_data), SD_CLONE_UP);
-	player->sprite_i._dst = (SDL_Rect){0, 0, 16 * DISPLAY_SCALE, 16 * DISPLAY_SCALE};
+	player->sprite_i._dst = (SDL_Rect){0, 0, 16, 16};
 
 	realign_player(player);
 
@@ -112,11 +112,11 @@ void	instance_player(t_pacman *player, int x, int y)
 
 void	realign_player(t_pacman *player)
 {
-	player->sprite.dst->x = (4 + ((player->x - 1) * 8)) * DISPLAY_SCALE;
-	player->sprite.dst->y = (4 + ((player->y - 1) * 8)) * DISPLAY_SCALE;
+	player->sprite.dst->x = (4 + ((player->x - 1) * 8));
+	player->sprite.dst->y = (4 + ((player->y - 1) * 8));
 
-	player->sprite_i.dst->x = (4 + ((player->x_i - 1) * 8)) * DISPLAY_SCALE;
-	player->sprite_i.dst->y = (4 + ((player->y_i - 1) * 8)) * DISPLAY_SCALE;
+	player->sprite_i.dst->x = (4 + ((player->x_i - 1) * 8));
+	player->sprite_i.dst->y = (4 + ((player->y_i - 1) * 8));
 }
 
 void	move_player(SDLX_GameInput *input, t_pacman *player, t_map map)
@@ -185,7 +185,7 @@ void	update_player(t_pmContext *gContext, t_pacman *player)
 		// SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite_i));
 		if (gContext->ticks % 2 == 0)
 			player->sprite.current--;
-		SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite));
+		SDLX_RenderQueue_Add(&(gContext->rQueue), &(player->sprite));
 		if (player->sprite.current != player->sprite.sprite_data->cycle)
 			return ;
 		else
@@ -206,6 +206,6 @@ void	update_player(t_pmContext *gContext, t_pacman *player)
 	player->x_i %= (GAME_COLS - 1);
 
 	realign_player(player);
-	SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite));
+	SDLX_RenderQueue_Add(&(gContext->rQueue), &(player->sprite));
 	// SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite_i));
 }

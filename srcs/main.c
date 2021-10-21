@@ -12,7 +12,10 @@
 ***************************************************************************/
 
 #include "pacman.h"
-#include <emscripten.h>
+
+#ifdef EMCC
+ # include <emscripten.h>
+#endif
 
 void	pacman_initalize(t_pmContext *gContext)
 {
@@ -20,9 +23,9 @@ void	pacman_initalize(t_pmContext *gContext)
 	gContext->ticks = 0;
 
 	init_BackgrundSprite(&(gContext->background));
-	SDLX_set_background(&(gContext->background));
+	SDLX_SetBackground(&(gContext->background));
 
-	SDLX_RenderQueue_init(&(gContext->rQueue));
+	SDLX_RenderQueue_Init(&(gContext->rQueue));
 
 	instance_ghost(&(gContext->blinky),	SD_BLINKY | SD_GHOST_RIGHT, 12, 11, target_blinky);
 	instance_ghost(&(gContext->pinky),	SD_PINKY  | SD_GHOST_RIGHT, 12, 11, target_pinky);
@@ -37,16 +40,16 @@ void	pacman_initalize(t_pmContext *gContext)
 
 	gContext->clone = SDL_FALSE;
 	gContext->pause = SDL_FALSE;
+	gContext->shouldQuit = SDL_FALSE;
 }
 
 void	main_loop(void *v_cxt)
 {
-	static SDL_bool	exit = SDL_FALSE;
 	t_pmContext		*gContext;
 
 	gContext = v_cxt;
-	exit = input_entry(&(g_GameInput));
-	if (exit == SDL_TRUE)
+	gContext->shouldQuit = input_entry(&(g_GameInput));
+	if (gContext->shouldQuit == SDL_TRUE)
 		return ;
 
 	if (g_GameInput.GameInput.button_GUIDE)
@@ -79,11 +82,11 @@ void	main_loop(void *v_cxt)
 		update_map(gContext);
 	}
 
-	if (exit != SDL_TRUE && SDLX_discrete_frames(&(gContext->ticks)) != EXIT_FAILURE)
+	if (gContext->shouldQuit != SDL_TRUE && SDLX_discrete_frames(&(gContext->ticks)) != EXIT_FAILURE)
 	{
 		draw_pellets(gContext->map);
-		SDLX_RenderQueue_flush(&(gContext->rQueue), SDLX_GetDisplay()->renderer);
-		SDLX_screen_reset(SDLX_GetDisplay()->renderer, NULL);
+		SDLX_RenderQueue_Flush(&(gContext->rQueue), SDLX_GetDisplay()->renderer, SDL_TRUE);
+		SDLX_ScreenReset(SDLX_GetDisplay()->renderer, NULL);
 	}
 	gContext->rQueue.index = 0;
 }
@@ -97,6 +100,12 @@ int	main(void)
 	SDLX_GetDisplay();
 	printf("Testing\n");
 	pacman_initalize(&(gContext));
+
+#ifdef EMCC
 	emscripten_set_main_loop_arg(main_loop, (void *)&(gContext), 0, SDL_TRUE);
+#else
+	while (gContext.shouldQuit == SDL_FALSE)
+		main_loop(&(gContext));
+#endif
 	return (EXIT_SUCCESS);
 }
