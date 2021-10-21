@@ -119,7 +119,7 @@ void	realign_player(t_pacman *player)
 	player->sprite_i.dst->y = (4 + ((player->y_i - 1) * 8));
 }
 
-void	move_player(SDLX_GameInput *input, t_pacman *player, t_map map)
+void	move_player(SDLX_GameInput *input, t_pacman *player, t_map *map)
 {
 	int	x;
 	int	y;
@@ -133,7 +133,7 @@ void	move_player(SDLX_GameInput *input, t_pacman *player, t_map map)
 
 	x = player->x;
 	y = player->y;
-	if (map[y + new_dir.c.y][x + new_dir.c.x] != 'W' && new_dir.val != SDLX_DIR_NONE)
+	if ((*map)[y + new_dir.c.y][x + new_dir.c.x] != 'W' && new_dir.val != SDLX_DIR_NONE)
 	{
 		player->x += new_dir.c.x;
 		player->y += new_dir.c.y;
@@ -142,13 +142,13 @@ void	move_player(SDLX_GameInput *input, t_pacman *player, t_map map)
 		if (input->GameInput.button_DPAD_DOWN)	{fetch_PacManSpriteInfo(&(player->sprite.sprite_data), SD_PACMAN_DOWN);	 player->facing.val = SDLX_DOWN;}
 		if (input->GameInput.button_DPAD_UP)	{fetch_PacManSpriteInfo(&(player->sprite.sprite_data), SD_PACMAN_UP);	 player->facing.val = SDLX_UP;}
 	}
-	else if (map[player->y + player->facing.c.y][player->x + player->facing.c.x] != 'W')
+	else if ((*map)[player->y + player->facing.c.y][player->x + player->facing.c.x] != 'W')
 	{
 		player->x += player->facing.c.x;
 		player->y += player->facing.c.y;
 	}
 
-	(void)map;
+	(void)(*map);
 
 
 	// x = player->x_i;
@@ -171,7 +171,7 @@ void	move_player(SDLX_GameInput *input, t_pacman *player, t_map map)
 	// }
 }
 
-void	update_player(t_pmContext *gContext, t_pacman *player)
+void	update_player(int ticks, t_pacman *player)
 {
 	player->sprite.current++;
 
@@ -183,21 +183,21 @@ void	update_player(t_pmContext *gContext, t_pacman *player)
 	if (player->dead == SDL_TRUE)
 	{
 		// SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite_i));
-		if (gContext->ticks % 2 == 0)
+		if (ticks % 2 == 0)
 			player->sprite.current--;
-		SDLX_RenderQueue_Add(&(gContext->rQueue), &(player->sprite));
+		SDLX_RenderQueue_Add(NULL, &(player->sprite));
 		if (player->sprite.current != player->sprite.sprite_data->cycle)
 			return ;
 		else
 		{
 			player->dead = SDL_FALSE;
-			fetch_PacManSpriteInfo(&(gContext->player.sprite.sprite_data), SD_PACMAN_UP);
+			fetch_PacManSpriteInfo(&(player->sprite.sprite_data), SD_PACMAN_UP);
 			player->x = 14;
 			player->y = 23;
 		}
 	}
 
-	move_player(&(g_GameInput), player, gContext->map);
+	move_player(&(g_GameInput), player, player->map);
 
 	player->x += (GAME_COLS - 1);
 	player->x %= (GAME_COLS - 1);
@@ -206,6 +206,6 @@ void	update_player(t_pmContext *gContext, t_pacman *player)
 	player->x_i %= (GAME_COLS - 1);
 
 	realign_player(player);
-	SDLX_RenderQueue_Add(&(gContext->rQueue), &(player->sprite));
+	SDLX_RenderQueue_Add(NULL, &(player->sprite));
 	// SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite_i));
 }

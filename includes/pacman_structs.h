@@ -14,6 +14,11 @@
 #include "SDLX.h"
 
 struct s_pmContext;
+struct s_level_scene;
+
+#define GAME_COLS 29
+#define GAME_ROWS 31
+typedef char t_map[GAME_ROWS][GAME_COLS];
 
 enum	ghost_state
 {
@@ -37,7 +42,9 @@ typedef struct	s_ghost
 	int			ghost;
 	SDLX_Sprite	sprite;
 
-	void		(*ghost_target)(struct s_pmContext *);
+	t_map		*map;
+
+	void		(*ghost_target)(struct s_level_scene *);
 }				t_ghost;
 
 typedef struct	s_pacman
@@ -59,35 +66,60 @@ typedef struct	s_pacman
 
 	SDLX_Sprite		sprite_i;
 
+	t_map			*map;
+
 	SDL_bool		dead;
 }				t_pacman;
 
-#define GAME_COLS 29
-#define GAME_ROWS 31
-
-typedef char t_map[GAME_ROWS][GAME_COLS];
+typedef void *(t_scene_fn)(struct s_pmContext *, void *);
 
 typedef struct	s_pmContext
 {
-	t_map		map;
-	int			ticks;
-	SDLX_Sprite	background;
-
+	int					ticks;
+	SDLX_Sprite			background;
 	SDLX_RenderQueue	rQueue;
 
-	int					fright_ticks;
-	t_ghost				blinky;
-	t_ghost				pinky;
-	t_ghost				inky;
-	t_ghost				clyde;
+	t_scene_fn	*init_fn;
+	t_scene_fn	*update_fn;
+	t_scene_fn	*close_fn;
 
-	t_pacman			player;
+	void		*meta;
+
+	SDL_bool			shouldChange;
+	SDL_bool			shouldQuit;
+
+
+	// SDLX_Sprite	background;
+	// t_map		map;
+
+	// int				fright_ticks;
+	// t_ghost			blinky;
+	// t_ghost			pinky;
+	// t_ghost			inky;
+	// t_ghost			clyde;
+
+	// t_pacman			player;
+	// SDL_bool			pause;
 
 	SDLX_GameInput		game_in;
 
-	SDL_bool			clone;
-	SDL_bool			pause;
-
-	SDL_bool			shouldQuit;
 
 }				t_pmContext;
+
+typedef struct	s_level_scene
+{
+	SDLX_Sprite	background;
+	t_map		map;
+	int			*ticks;
+
+	int				fright_ticks;
+	t_ghost			blinky;
+	t_ghost			pinky;
+	t_ghost			inky;
+	t_ghost			clyde;
+
+	t_pacman			player;
+	SDL_bool			pause;
+	SDL_bool			clone;
+
+}				t_level_scene;

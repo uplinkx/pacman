@@ -13,7 +13,7 @@
 
 #include "pacman.h"
 
-void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_pmContext *))
+void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *))
 {
 	dest->ghost = ghost;
 	fetch_GhostSpriteInfo(&(dest->sprite.sprite_data), ghost);
@@ -37,13 +37,13 @@ void	realign_ghost(t_ghost *ghost)
 	ghost->sprite.dst->y = (4 + ((ghost->y - 1) * 8));
 }
 
-void	target_blinky(t_pmContext *gContext)
+void	target_blinky(t_level_scene *gContext)
 {
 	gContext->blinky.tar_x = gContext->player.x;
 	gContext->blinky.tar_y = gContext->player.y;
 }
 
-void	target_pinky(t_pmContext *gContext)
+void	target_pinky(t_level_scene *gContext)
 {
 	gContext->pinky.tar_x = gContext->player.x;
 	gContext->pinky.tar_y = gContext->player.y;
@@ -61,7 +61,7 @@ void	target_pinky(t_pmContext *gContext)
 		gContext->pinky.tar_x = gContext->player.x + 4;
 }
 
-void	target_inky(t_pmContext *gContext)
+void	target_inky(t_level_scene *gContext)
 {
 	int	m_x;
 	int	m_y;
@@ -91,7 +91,7 @@ void	target_inky(t_pmContext *gContext)
 	gContext->inky.tar_y = m_y - d_y;
 }
 
-void	target_clyde(t_pmContext *gContext)
+void	target_clyde(t_level_scene *gContext)
 {
 	int	dis_to_pacman;
 	int	x;
@@ -220,44 +220,44 @@ void	move_random_dir(t_ghost *ghost, t_map map)
 	}
 }
 
-void	update_ghost(t_pmContext *gContext, t_ghost *ghost)
+void	update_ghost(t_level_scene *scene, t_ghost *ghost)
 {
 	t_pacman	*player;
 
-	player = &(gContext->player);
+	player = &(scene->player);
 	if (ghost->mode == GM_FRIGHTEN)
 	{
-		if (ghost_player_collision(ghost, &(gContext->player)))
+		if (ghost_player_collision(ghost, &(scene->player)))
 		{
 			fetch_GhostSpriteInfo(&(ghost->sprite.sprite_data), SD_GHOST_EYES);
 			ghost->mode = GM_EATEN;
 		}
-		if (gContext->fright_ticks == 0)
+		if (scene->fright_ticks == 0)
 		{
 			fetch_GhostSpriteInfo(&(ghost->sprite.sprite_data), ghost->ghost);
 			ghost->mode = GM_CHASE;
 		}
-		move_random_dir(ghost, gContext->map);
+		move_random_dir(ghost, scene->map);
 	}
 	else if (ghost->mode == GM_CHASE)
 	{
-		ghost->ghost_target(gContext);
-		if (gContext->ticks % 4 != 1)
-			move_ghost(ghost, gContext->map);
-		if (ghost_player_collision(ghost, &(gContext->player)) && gContext->player.dead != SDL_TRUE)
+		ghost->ghost_target(scene);
+		if ((*scene->ticks) % 4 != 1)
+			move_ghost(ghost, scene->map);
+		if (ghost_player_collision(ghost, &(scene->player)) && scene->player.dead != SDL_TRUE)
 		{
-			gContext->player.dead = SDL_TRUE;
-			gContext->player.facing.val = SDLX_DIR_NONE;
-			gContext->player.facing_i.val = SDLX_DIR_NONE;
-			fetch_PacManSpriteInfo(&(gContext->player.sprite.sprite_data), SD_PACMAN_DEATH);
-			gContext->player.sprite.current = 0;
+			scene->player.dead = SDL_TRUE;
+			scene->player.facing.val = SDLX_DIR_NONE;
+			scene->player.facing_i.val = SDLX_DIR_NONE;
+			fetch_PacManSpriteInfo(&(scene->player.sprite.sprite_data), SD_PACMAN_DEATH);
+			scene->player.sprite.current = 0;
 		}
 	}
 	else if (ghost->mode == GM_EATEN)
 	{
 		ghost->tar_x = 11;
 		ghost->tar_y = 11;
-		move_ghost(ghost, gContext->map);
+		move_ghost(ghost, scene->map);
 		if (ghost->x == 11 && ghost->y == 11)
 		{
 			fetch_GhostSpriteInfo(&(ghost->sprite.sprite_data), ghost->ghost);
@@ -270,5 +270,5 @@ void	update_ghost(t_pmContext *gContext, t_ghost *ghost)
 
 	realign_ghost(ghost);
 	ghost->sprite.current++;
-	SDLX_RenderQueue_Add(&(gContext->rQueue), &(ghost->sprite));
+	SDLX_RenderQueue_Add(NULL, &(ghost->sprite));
 }

@@ -21,25 +21,39 @@
 
 # define ASSETS "assets/"
 
+void	*new_scene(size_t size, t_pmContext *context, char *background_path, void *(close)(t_pmContext *, void *), void *(update)(t_pmContext *, void *));
+
 SDL_bool	input_entry(SDLX_GameInput *game_input);
 void		init_input_mappers(void);
 
-void		instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_pmContext *));
-void		update_ghost(t_pmContext *gContext, t_ghost *ghost);
+void		instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *));
+void		update_ghost(t_level_scene *scene, t_ghost *ghost);
 void		realign_ghost(t_ghost *ghost);
 
-void		target_clyde(t_pmContext *gContext);
-void		target_inky(t_pmContext *gContext);
-void		target_pinky(t_pmContext *gContext);
-void		target_blinky(t_pmContext *gContext);
+void		target_clyde(t_level_scene *gContext);
+void		target_inky(t_level_scene *gContext);
+void		target_pinky(t_level_scene *gContext);
+void		target_blinky(t_level_scene *gContext);
 void		draw_target(int x, int y);
 
 void		instance_player(t_pacman *player, int x, int y);
-void		update_player(t_pmContext *gContext, t_pacman *player);
+void		update_player(int ticks, t_pacman *player);
 void		realign_player(t_pacman *player);
 
-void		draw_pellets(t_map map);
+void		draw_pellets(t_map *map);
 void		fill_map(t_map *map_dest);
-void		update_map(t_pmContext *gContext);
+void		update_map(t_level_scene *scene);
+
+void	*main_menu_init(t_pmContext *context, void *vp_scene);
+void	*main_menu_close(t_pmContext *context, void *vp_scene);
+void	*main_menu_update(t_pmContext *context, void *vp_scene);
+
+void	*level_init(t_pmContext *context, void *vp_scene);
+void	*level_close(t_pmContext *context, void *vp_scene);
+void	*level_update(t_pmContext *context, void *vp_scene);
+
+void	*gameover_init(t_pmContext *context, void *vp_scene);
+void	*gameover_close(t_pmContext *context, void *vp_scene);
+void	*gameover_update(t_pmContext *context, void *vp_scene);
 
 #endif

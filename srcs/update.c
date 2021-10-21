@@ -13,45 +13,45 @@
 
 #include "pacman.h"
 
-void	update_map(t_pmContext *gContext)
+void	update_map(t_level_scene *scene)
 {
 	int	p_x;
 	int	p_y;
 
-	p_x = gContext->player.x;
-	p_y = gContext->player.y;
+	p_x = scene->player.x;
+	p_y = scene->player.y;
 
-	if (gContext->map[p_y][p_x] == '.')
+	if (scene->map[p_y][p_x] == '.')
 	{
-		gContext->map[p_y][p_x] = ' ';
+		scene->map[p_y][p_x] = ' ';
 		// if (SDLX_XboxController_link(0) != NULL)
 		// 	SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
 	}
-	if (gContext->map[p_y][p_x] == 'P')
+	if (scene->map[p_y][p_x] == 'P')
 	{
-		gContext->blinky.mode = GM_FRIGHTEN;
-		fetch_GhostSpriteInfo(&(gContext->blinky.sprite.sprite_data), SD_GHOST_FRIGTHEN);
-		gContext->pinky.mode = GM_FRIGHTEN;
-		fetch_GhostSpriteInfo(&(gContext->pinky.sprite.sprite_data), SD_GHOST_FRIGTHEN);
-		gContext->inky.mode = GM_FRIGHTEN;
-		fetch_GhostSpriteInfo(&(gContext->inky.sprite.sprite_data), SD_GHOST_FRIGTHEN);
-		gContext->clyde.mode = GM_FRIGHTEN;
-		fetch_GhostSpriteInfo(&(gContext->clyde.sprite.sprite_data), SD_GHOST_FRIGTHEN);
-		gContext->map[p_y][p_x] = ' ';
-		gContext->fright_ticks = 70;
+		scene->blinky.mode = GM_FRIGHTEN;
+		fetch_GhostSpriteInfo(&(scene->blinky.sprite.sprite_data), SD_GHOST_FRIGTHEN);
+		scene->pinky.mode = GM_FRIGHTEN;
+		fetch_GhostSpriteInfo(&(scene->pinky.sprite.sprite_data), SD_GHOST_FRIGTHEN);
+		scene->inky.mode = GM_FRIGHTEN;
+		fetch_GhostSpriteInfo(&(scene->inky.sprite.sprite_data), SD_GHOST_FRIGTHEN);
+		scene->clyde.mode = GM_FRIGHTEN;
+		fetch_GhostSpriteInfo(&(scene->clyde.sprite.sprite_data), SD_GHOST_FRIGTHEN);
+		scene->map[p_y][p_x] = ' ';
+		scene->fright_ticks = 70;
 	}
 
-	gContext->clone |= g_GameInput.GameInput.button_B;
+	scene->clone |= g_GameInput.GameInput.button_B;
 
-	p_x = gContext->player.x_i;
-	p_y = gContext->player.y_i;
-	if (gContext->map[p_y][p_x] == '.' && gContext->clone)
+	p_x = scene->player.x_i;
+	p_y = scene->player.y_i;
+	if (scene->map[p_y][p_x] == '.' && scene->clone)
 	{
-		gContext->map[p_y][p_x] = ' ';
+		scene->map[p_y][p_x] = ' ';
 		// if (SDLX_XboxController_link(0) != NULL)
 		// 	SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
 	}
 
-	if (gContext->fright_ticks > 0)
-		gContext->fright_ticks--;
+	if (scene->fright_ticks > 0)
+		scene->fright_ticks--;
 }

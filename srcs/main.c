@@ -19,28 +19,16 @@
 
 void	pacman_initalize(t_pmContext *gContext)
 {
-	fill_map(&(gContext->map));
 	gContext->ticks = 0;
-
-	init_BackgrundSprite(&(gContext->background));
-	SDLX_SetBackground(&(gContext->background));
-
-	SDLX_RenderQueue_Init(&(gContext->rQueue));
-
-	instance_ghost(&(gContext->blinky),	SD_BLINKY | SD_GHOST_RIGHT, 12, 11, target_blinky);
-	instance_ghost(&(gContext->pinky),	SD_PINKY  | SD_GHOST_RIGHT, 12, 11, target_pinky);
-	instance_ghost(&(gContext->inky),	SD_INKY   | SD_GHOST_RIGHT, 13, 11, target_inky);
-	instance_ghost(&(gContext->clyde),	SD_CLYDE  | SD_GHOST_RIGHT, 15, 11, target_clyde);
-
-	instance_player(&(gContext->player), 14, 23);
 
 	init_input_mappers();
 
 	srand(0x9AC533D);
 
-	gContext->clone = SDL_FALSE;
-	gContext->pause = SDL_FALSE;
 	gContext->shouldQuit = SDL_FALSE;
+	gContext->shouldChange = SDL_TRUE;
+
+	gContext->init_fn = level_init;
 }
 
 void	main_loop(void *v_cxt)
@@ -48,44 +36,21 @@ void	main_loop(void *v_cxt)
 	t_pmContext		*gContext;
 
 	gContext = v_cxt;
+	if (gContext->shouldChange == SDL_TRUE)
+	{
+		gContext->init_fn(gContext, gContext->meta);
+		gContext->shouldChange = SDL_FALSE;
+	}
+
 	gContext->shouldQuit = input_entry(&(g_GameInput));
 	if (gContext->shouldQuit == SDL_TRUE)
 		return ;
 
-	if (g_GameInput.GameInput.button_GUIDE)
-	{
-		SDL_Log("Pressed");
-		if (gContext->pause == SDL_FALSE)
-		{
-			gContext->pause = SDL_TRUE;
-			SDL_Delay(140);
-		}
-		else
-		{
-			gContext->pause = SDL_FALSE;
-			SDL_Delay(140);
-		}
-	}
-
-	if (g_GameInput.GameInput.button_START)
-		pacman_initalize(gContext);
-
-	if (gContext->pause == SDL_FALSE)
-	{
-		update_ghost(gContext, &(gContext->blinky));
-		update_ghost(gContext, &(gContext->pinky));
-		update_ghost(gContext, &(gContext->inky));
-		update_ghost(gContext, &(gContext->clyde));
-
-		update_player(gContext, &(gContext->player));
-
-		update_map(gContext);
-	}
+	gContext->update_fn(gContext, gContext->meta);
 
 	if (gContext->shouldQuit != SDL_TRUE && SDLX_discrete_frames(&(gContext->ticks)) != EXIT_FAILURE)
 	{
-		draw_pellets(gContext->map);
-		SDLX_RenderQueue_Flush(&(gContext->rQueue), SDLX_GetDisplay()->renderer, SDL_TRUE);
+		SDLX_RenderQueue_Flush(NULL, SDLX_GetDisplay()->renderer, SDL_TRUE);
 		SDLX_ScreenReset(SDLX_GetDisplay()->renderer, NULL);
 	}
 	gContext->rQueue.index = 0;

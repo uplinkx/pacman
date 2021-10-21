@@ -43,9 +43,11 @@ SRC_NAMES = \
 	ghost_sprite \
 	ghost \
 	input \
+	level_scene \
 	main \
 	map \
 	player \
+	scene_utils \
 	update \
 
 
