@@ -20,6 +20,7 @@
 void	pacman_initalize(t_pmContext *gContext)
 {
 	gContext->init_fn = level_init;
+	gContext->init_fn = main_menu_init;
 	gContext->update_fn = NULL;
 	gContext->close_fn = NULL;
 
@@ -27,6 +28,9 @@ void	pacman_initalize(t_pmContext *gContext)
 
 	gContext->shouldQuit = SDL_FALSE;
 	gContext->shouldChange = SDL_TRUE;
+
+	TTF_Init();
+	gContext->font = TTF_OpenFont(ASSETS"pixel_font.ttf", 150);
 
 	g_GameInput.key_mapper.map_arr = pacman_key_map(&(g_GameInput.key_mapper.amount));
 	g_GameInput.pad_mapper.map_arr = pacman_pad_map(&(g_GameInput.pad_mapper.amount));
@@ -46,6 +50,7 @@ void	main_loop(void *v_cxt)
 
 	SDLX_record_input(NULL);
 	gContext->shouldQuit = SDLX_poll();
+	SDLX_GameInput_Mouse_Fill(&(g_GameInput), SDL_TRUE);
 	SDLX_KeyMap(&(g_GameInput.key_mapper), g_GameInput.keystate);
 	if (gContext->shouldQuit == SDL_TRUE)
 		return ;

@@ -6,7 +6,7 @@
 /*   By: home <home@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/21 01:10:16 by home              #+#    #+#             */
-/*   Updated: 2021/07/25 16:09:58 by home             ###   ########.fr       */
+/*   Updated: 2021/10/21 17:58:19 by home             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	SDLX_Button_Init(SDLX_button *dst, int (*sprite_fn)(SDLX_Sprite_Data **, int
 	dst->sprite_fn = sprite_fn;
 
 	SDLX_new_Sprite(&(dst->sprite));
-	dst->sprite_fn(&(dst->sprite.sprite_data), sprite_no);
+	if (dst->sprite_fn != NULL)
+		dst->sprite_fn(&(dst->sprite.sprite_data), sprite_no);
 	dst->sprite._dst = placement;
 
 	dst->trigger_box = dst->sprite._dst;

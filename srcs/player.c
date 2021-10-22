@@ -79,10 +79,6 @@ int		fetch_PacManSpriteInfo(SDLX_Sprite_Data **dst, int no)
 	else if (no == SD_PACMAN_RIGHT)	{ (*dst) = &(sprite_arr[1 * 4]); return (EXIT_SUCCESS);}
 	else if (no == SD_PACMAN_UP)	{ (*dst) = &(sprite_arr[2 * 4]); return (EXIT_SUCCESS);}
 	else if (no == SD_PACMAN_DOWN)	{ (*dst) = &(sprite_arr[3 * 4]); return (EXIT_SUCCESS);}
-	else if (no == SD_CLONE_LEFT)	{ (*dst) = &(sprite_arr[4 * 4]); SDL_Log("Clone Left"); return (EXIT_SUCCESS);}
-	else if (no == SD_CLONE_RIGHT)	{ (*dst) = &(sprite_arr[5 * 4]); SDL_Log("Clone Right"); return (EXIT_SUCCESS);}
-	else if (no == SD_CLONE_UP)		{ (*dst) = &(sprite_arr[6 * 4]); SDL_Log("Clone Up"); return (EXIT_SUCCESS);}
-	else if (no == SD_CLONE_DOWN)	{ (*dst) = &(sprite_arr[7 * 4]); SDL_Log("Clone Down"); return (EXIT_SUCCESS);}
 	else if (no == SD_PACMAN_DEATH)	{ (*dst) = &(sprite_arr[8 * 4]); return (EXIT_SUCCESS);}
 	else { (*dst) = NULL; return (EXIT_FAILURE);}
 }
@@ -92,18 +88,11 @@ void	instance_player(t_pacman *player, int x, int y)
 	player->x = x;
 	player->y = y;
 
-	player->x_i = x;
-	player->y_i = y;
-
 	player->facing.val = SDLX_DIR_NONE;
 
 	SDLX_new_Sprite(&(player->sprite));
 	fetch_PacManSpriteInfo(&(player->sprite.sprite_data), SD_PACMAN_UP);
 	player->sprite._dst = (SDL_Rect){0, 0, 16, 16};
-
-	SDLX_new_Sprite(&(player->sprite_i));
-	fetch_PacManSpriteInfo(&(player->sprite_i.sprite_data), SD_CLONE_UP);
-	player->sprite_i._dst = (SDL_Rect){0, 0, 16, 16};
 
 	realign_player(player);
 
@@ -114,9 +103,6 @@ void	realign_player(t_pacman *player)
 {
 	player->sprite.dst->x = (4 + ((player->x - 1) * 8));
 	player->sprite.dst->y = (4 + ((player->y - 1) * 8));
-
-	player->sprite_i.dst->x = (4 + ((player->x_i - 1) * 8));
-	player->sprite_i.dst->y = (4 + ((player->y_i - 1) * 8));
 }
 
 void	move_player(SDLX_GameInput *input, t_pacman *player, t_map *map)
@@ -148,41 +134,17 @@ void	move_player(SDLX_GameInput *input, t_pacman *player, t_map *map)
 		player->y += player->facing.c.y;
 	}
 
-	(void)(*map);
-
-
-	// x = player->x_i;
-	// y = player->y_i;
-	// if (new_dir.val == SDLX_LEFT || new_dir.val == SDLX_RIGHT)
-	// 	new_dir = SDLX_reverse_dir(new_dir);
-	// if (map[y + new_dir.c.y][x + new_dir.c.x] != 'W' && new_dir.val != SDLX_DIR_NONE)
-	// {
-	// 	player->x_i += new_dir.c.x;
-	// 	player->y_i += new_dir.c.y;
-	// 	if (input->GameInput.button_DPAD_LEFT)	{fetch_PacManSpriteInfo(&(player->sprite_i.sprite_data), SD_CLONE_RIGHT);	player->facing_i.val = SDLX_RIGHT;}
-	// 	if (input->GameInput.button_DPAD_RIGHT)	{fetch_PacManSpriteInfo(&(player->sprite_i.sprite_data), SD_CLONE_LEFT);	player->facing_i.val = SDLX_LEFT;}
-	// 	if (input->GameInput.button_DPAD_UP)	{fetch_PacManSpriteInfo(&(player->sprite_i.sprite_data), SD_CLONE_UP);		player->facing_i.val = SDLX_UP;}
-	// 	if (input->GameInput.button_DPAD_DOWN)	{fetch_PacManSpriteInfo(&(player->sprite_i.sprite_data), SD_CLONE_DOWN);	player->facing_i.val = SDLX_DOWN;}
-	// }
-	// else if (map[player->y_i + player->facing_i.c.y][player->x_i + player->facing_i.c.x] != 'W')
-	// {
-	// 	player->x_i += player->facing_i.c.x;
-	// 	player->y_i += player->facing_i.c.y;
-	// }
 }
 
 void	update_player(int ticks, t_pacman *player)
 {
 	player->sprite.current++;
 
-	player->sprite_i.current++;
-
 	player->prev_x = player->x;
 	player->prev_y = player->y;
 
 	if (player->dead == SDL_TRUE)
 	{
-		// SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite_i));
 		if (ticks % 2 == 0)
 			player->sprite.current--;
 		SDLX_RenderQueue_Add(NULL, &(player->sprite));
@@ -202,10 +164,6 @@ void	update_player(int ticks, t_pacman *player)
 	player->x += (GAME_COLS - 1);
 	player->x %= (GAME_COLS - 1);
 
-	player->x_i += (GAME_COLS - 1);
-	player->x_i %= (GAME_COLS - 1);
-
 	realign_player(player);
 	SDLX_RenderQueue_Add(NULL, &(player->sprite));
-	// SDLX_RenderQueue_add(&(gContext->rQueue), &(player->sprite_i));
 }

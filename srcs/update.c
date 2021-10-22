@@ -43,8 +43,6 @@ void	update_map(t_level_scene *scene)
 
 	scene->clone |= g_GameInput.GameInput.button_B;
 
-	p_x = scene->player.x_i;
-	p_y = scene->player.y_i;
 	if (scene->map[p_y][p_x] == '.' && scene->clone)
 	{
 		scene->map[p_y][p_x] = ' ';

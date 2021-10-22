@@ -248,7 +248,6 @@ void	update_ghost(t_level_scene *scene, t_ghost *ghost)
 		{
 			scene->player.dead = SDL_TRUE;
 			scene->player.facing.val = SDLX_DIR_NONE;
-			scene->player.facing_i.val = SDLX_DIR_NONE;
 			fetch_PacManSpriteInfo(&(scene->player.sprite.sprite_data), SD_PACMAN_DEATH);
 			scene->player.sprite.current = 0;
 		}

@@ -37,3 +37,32 @@ void	*new_scene(size_t size, t_pmContext *context, char *background_path, void *
 
 	return (result);
 }
+
+void	*button_trigger_scene_switch(SDLX_button *self, void *vp_context, SDL_UNUSED size_t length)
+{
+	t_pmContext *context;
+
+	if (SDLX_GAME_RELEASE(g_GameInput, g_GameInput_prev, primleft))
+	{
+		context = vp_context;
+		context->init_fn = self->meta1;
+		context->shouldChange = SDL_TRUE;
+	}
+
+	return (NULL);
+}
+
+void	*button_trigger_start_scene_switch(SDLX_button *self, void *vp_context, SDL_UNUSED size_t length)
+{
+	t_pmContext *context;
+
+	if (g_GameInput.GameInput.button_primleft || g_GameInput.keystate[SDL_SCANCODE_RETURN]
+		|| g_GameInput.keystate[SDL_SCANCODE_SPACE])
+	{
+		context = vp_context;
+		context->init_fn = self->meta1;
+		context->shouldChange = SDL_TRUE;
+	}
+
+	return (NULL);
+}

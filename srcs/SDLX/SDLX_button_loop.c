@@ -76,6 +76,25 @@ void	SDLX_Button_Update(SDLX_button *button)
 	button->sprite.current++;
 }
 
+void	SDLX_Button_Update_noDraw(SDLX_button *button)
+{
+	SDL_bool	get_focus;
+
+	if (button->isDisabled == SDL_TRUE)
+		return ;
+
+	get_focus = button->get_focus_fn(button, button->meta, button->meta_length);
+	if (get_focus == SDL_TRUE) //This could be 'in focus triggers'
+		SDLX_Button_Focus(button);
+	else if (button->isFocused == SDL_TRUE && get_focus == SDL_FALSE) // Was focused but no longer
+		SDLX_Button_Lose_Focus(button);
+
+	button->update_fn(button, button->meta, button->meta_length);
+
+	if (button->isGloballyActive == SDL_TRUE)
+		button->trigger_fn(button, button->meta, button->meta_length);
+}
+
 /*
 ** The button is assumed to non-focusable or focused unnecessarily.
 ** No focus type of functions are checked. And the button is assumed to be always triggerable

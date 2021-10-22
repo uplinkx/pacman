@@ -59,13 +59,6 @@ typedef struct	s_pacman
 
 	SDLX_Sprite		sprite;
 
-	int			x_i;
-	int			y_i;
-
-	SDLX_direction	facing_i;
-
-	SDLX_Sprite		sprite_i;
-
 	t_map			*map;
 
 	SDL_bool		dead;
@@ -85,6 +78,8 @@ typedef struct	s_pmContext
 
 	SDL_bool	shouldChange;
 	SDL_bool	shouldQuit;
+
+	TTF_Font	*font;
 }				t_pmContext;
 
 typedef struct	s_level_scene
@@ -103,3 +98,15 @@ typedef struct	s_level_scene
 	SDL_bool	clone;
 
 }				t_level_scene;
+
+typedef struct	s_text
+{
+	SDL_Color	color;
+	double		scale;
+	size_t		message_length;
+	char		*message;
+	char		*set;
+	SDLX_Sprite	sprite;
+
+	TTF_Font	*set_font;
+}				t_text;

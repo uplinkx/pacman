@@ -151,6 +151,9 @@ void	SDLX_RenderQueue_Flush_Direct(SDLX_RenderQueue *queue, SDL_Renderer *render
 
 void	SDLX_RenderQueue_Add(SDLX_RenderQueue *dst, SDLX_Sprite *src)
 {
+	// if (src == NULL || src->sprite_data == NULL)
+	// 	return ;
+
 	if (dst == NULL)
 		dst = &(default_RenderQueue);
 

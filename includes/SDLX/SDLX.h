@@ -7,6 +7,7 @@
 
 # include "SDL2/SDL.h"
 # include "SDL2/SDL_image.h"
+# include "SDL2/SDL_ttf.h"
 
 # include "SDLX_const.h"
 # include "SDLX_config.h"
@@ -79,6 +80,7 @@ void			SDLX_Button_Focus(SDLX_button *button);
 void			SDLX_Button_ReFocus(SDLX_button *button);
 void			SDLX_Button_Lose_Focus(SDLX_button *button);
 void			SDLX_Button_Update(SDLX_button *button);
+void			SDLX_Button_Update_noDraw(SDLX_button *button);
 void			SDLX_Style_Button(SDLX_button *button, int norm, int hover);
 void			*SDLX_Button_NULL_fn(SDL_UNUSED SDLX_button *button, SDL_UNUSED void *meta, SDL_UNUSED size_t meta_length);
 SDL_bool		SDLX_Button_onHoverFocus(SDLX_button *self, SDL_UNUSED void *meta, SDL_UNUSED size_t meta_length);

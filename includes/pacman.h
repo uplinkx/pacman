@@ -22,6 +22,12 @@
 # define ASSETS "assets/"
 
 void	*new_scene(size_t size, t_pmContext *context, char *background_path, void *(close)(t_pmContext *, void *), void *(update)(t_pmContext *, void *));
+void	*button_trigger_scene_switch(SDLX_button *self, void *vp_context, SDL_UNUSED size_t length);
+void	*button_trigger_start_scene_switch(SDLX_button *self, void *vp_context, SDL_UNUSED size_t length);
+
+void	change_message(t_text *text, char *to, SDL_bool allocate);
+void	create_text(t_text *dst, int color, SDL_Rect loc, char *message, double scale, TTF_Font *font);
+void	update_text(t_text *text, size_t size);
 
 SDLX_iMap	*pacman_key_map(size_t *size);
 SDLX_iMap	*pacman_pad_map(size_t *size);

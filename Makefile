@@ -44,10 +44,12 @@ SRC_NAMES = \
 	ghost \
 	input \
 	level_scene \
+	main_scene \
 	main \
 	map \
 	player \
 	scene_utils \
+	text \
 	update \
 
 

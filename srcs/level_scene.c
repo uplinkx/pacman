@@ -17,7 +17,7 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 {
 	t_level_scene	*scene;
 
-	scene = new_scene(sizeof(*scene), context, NULL, level_close, level_update);
+	scene = new_scene(sizeof(*scene), context, ASSETS"pacman_background.png", level_close, level_update);
 
 	scene->ticks = 0;
 	fill_map(&(scene->map));
@@ -36,10 +36,6 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 
 	scene->pause = SDL_FALSE;
 	scene->clone = SDL_FALSE;
-
-
-	context->background = SDLX_Sprite_Static(ASSETS"pacman_background.png");
-	SDLX_SetBackground(&(context->background));
 
 	(void)vp_scene;
 	return (NULL);
