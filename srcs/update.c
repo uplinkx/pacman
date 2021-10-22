@@ -13,11 +13,13 @@
 
 #include "pacman.h"
 
-void	update_map(t_level_scene *scene)
+int		update_map(t_level_scene *scene)
 {
 	int	p_x;
 	int	p_y;
+	int	score;
 
+	score = 0;
 	p_x = scene->player.x;
 	p_y = scene->player.y;
 
@@ -26,6 +28,7 @@ void	update_map(t_level_scene *scene)
 		scene->map[p_y][p_x] = ' ';
 		// if (SDLX_XboxController_link(0) != NULL)
 		// 	SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
+		score += 10;
 	}
 	if (scene->map[p_y][p_x] == 'P')
 	{
@@ -39,8 +42,11 @@ void	update_map(t_level_scene *scene)
 		fetch_GhostSpriteInfo(&(scene->clyde.sprite.sprite_data), SD_GHOST_FRIGTHEN);
 		scene->map[p_y][p_x] = ' ';
 		scene->fright_ticks = 70;
+		score += 100;
 	}
 
 	if (scene->fright_ticks > 0)
 		scene->fright_ticks--;
+
+	return (score);
 }

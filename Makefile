@@ -96,10 +96,10 @@ save: fclean
 re: fclean all
 
 rew:
-	rm -f ../index.data
-	rm -f ../index.html
-	rm -f ../index.js
-	rm -f ../index.wasm
+	rm -f index.data
+	rm -f index.html
+	rm -f index.js
+	rm -f index.wasm
 	make allw
 
 run:

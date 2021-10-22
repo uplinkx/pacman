@@ -20,7 +20,6 @@ struct s_level_scene;
 #define GAME_ROWS 31
 typedef char t_map[GAME_ROWS][GAME_COLS];
 
-
 typedef struct	s_text
 {
 	SDL_Color	color;
@@ -74,7 +73,8 @@ typedef struct	s_pacman
 
 	t_map			*map;
 
-	SDL_bool		dead;
+	int			lives;
+	SDL_bool	dead;
 }				t_pacman;
 
 typedef void *(t_scene_fn)(struct s_pmContext *, void *);
@@ -94,6 +94,8 @@ typedef struct	s_pmContext
 
 	TTF_Font	*font;
 	TTF_Font	*font2;
+
+	int			best;
 }				t_pmContext;
 
 typedef struct	s_level_scene
@@ -111,6 +113,17 @@ typedef struct	s_level_scene
 	SDL_bool	pause;
 	SDL_bool	clone;
 
-	t_text		ready;
+	t_text		play_again;
+	SDLX_button	play_again_b;
 
+	t_text		ready;
+	t_text		gameover;
+
+	t_text		t_score;
+	int			score;
+
+	t_text		high_score;
+	t_text		best_score;
+
+	SDLX_Sprite	lives[10];
 }				t_level_scene;

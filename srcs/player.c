@@ -102,7 +102,7 @@ void	instance_player(t_pacman *player, int x, int y)
 void	realign_player(t_pacman *player)
 {
 	player->sprite.dst->x = (4 + ((player->x - 1) * 8));
-	player->sprite.dst->y = (4 + ((player->y - 1) * 8));
+	player->sprite.dst->y = (4 + ((player->y) * 8));
 }
 
 void	move_player(SDLX_GameInput *input, t_pacman *player, t_map *map)
@@ -152,6 +152,7 @@ void	update_player(int ticks, t_pacman *player)
 			return ;
 		else
 		{
+			player->lives--;
 			player->dead = SDL_FALSE;
 			fetch_PacManSpriteInfo(&(player->sprite.sprite_data), SD_PACMAN_UP);
 			player->x = 14;

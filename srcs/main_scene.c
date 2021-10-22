@@ -64,7 +64,7 @@ void	*main_menu_update(t_pmContext *context, void *vp_scene)
 
 	// SDLX_RenderQueue_Add(NULL, &(scene->start.sprite));
 
-	scale = (SDL_sin(scene->ticks / 2) * .03) + 1;
+	scale = (SDL_sin(scene->ticks / 2) * .04) + 1;
 	scene->s_transform._dst.w = scene->start.sprite._dst.w * scale;
 	scene->s_transform._dst.h = scene->start.sprite._dst.h * scale;
 	scene->s_transform._dst.x = (224 - scene->s_transform._dst.w) / 2;

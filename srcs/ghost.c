@@ -34,7 +34,7 @@ void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_
 void	realign_ghost(t_ghost *ghost)
 {
 	ghost->sprite.dst->x = (4 + ((ghost->x - 1) * 8));
-	ghost->sprite.dst->y = (4 + ((ghost->y - 1) * 8));
+	ghost->sprite.dst->y = (4 + ((ghost->y) * 8));
 }
 
 void	target_blinky(t_level_scene *gContext)

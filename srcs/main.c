@@ -33,6 +33,8 @@ void	pacman_initalize(t_pmContext *gContext)
 	gContext->font = TTF_OpenFont(ASSETS"pixel_font.ttf", 150);
 	gContext->font2 = TTF_OpenFont(ASSETS"yoster-island.regular.ttf", 120);
 
+	gContext->best = 0;
+
 	g_GameInput.key_mapper.map_arr = pacman_key_map(&(g_GameInput.key_mapper.amount));
 	g_GameInput.pad_mapper.map_arr = pacman_pad_map(&(g_GameInput.pad_mapper.amount));
 	srand(0x9AC533D);
@@ -62,6 +64,14 @@ void	main_loop(void *v_cxt)
 	{
 		SDLX_RenderQueue_Flush(NULL, SDLX_GetDisplay()->renderer, SDL_TRUE);
 		SDLX_ScreenReset(SDLX_GetDisplay()->renderer, NULL);
+	}
+
+	if (gContext->shouldChange == SDL_TRUE)
+	{
+		SDLX_CollisionBucket_Flush(NULL);
+		SDLX_RenderQueue_Flush(NULL, SDLX_GetDisplay()->renderer, SDL_FALSE);
+
+		gContext->close_fn(gContext, gContext->meta);
 	}
 }
 

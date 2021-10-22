@@ -67,8 +67,8 @@ void	draw_pellets(t_map *map)
 		{
 			if ((*map)[i][j] == '.')
 			{
-				pellet._dst.y = (i * 8 - 3);
-				pellet._dst.x = (j * 8 - 3);
+				pellet._dst.y = (i * 8 + 4);
+				pellet._dst.x = (j * 8 - 4);
 				SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet));
 			}
 			j++;
@@ -77,12 +77,12 @@ void	draw_pellets(t_map *map)
 	}
 
 	fetch_ExtraSpriteInfo(&(pellet.sprite_data), 2);
-	pellet._dst = (SDL_Rect){1 * 8 - 3, 3 * 8 - 3, 16, 16};
+	pellet._dst = (SDL_Rect){1 * 8 - 3, 3 * 8 + 2, 16, 16};
 	if ((*map)[3][1] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
-	pellet._dst = (SDL_Rect){26 * 8 - 3, 3 * 8 - 3, 16, 16};
+	pellet._dst = (SDL_Rect){26 * 8 - 3, 3 * 8 + 2, 16, 16};
 	if ((*map)[3][26] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
-	pellet._dst = (SDL_Rect){1 * 8 - 3, 23 * 8 - 3, 16, 16};
+	pellet._dst = (SDL_Rect){1 * 8 - 3, 23 * 8 + 2, 16, 16};
 	if ((*map)[23][1] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
-	pellet._dst = (SDL_Rect){26 * 8 - 3, 23 * 8 - 3, 16, 16};
+	pellet._dst = (SDL_Rect){26 * 8 - 3, 23 * 8 + 2, 16, 16};
 	if ((*map)[23][26] == 'P')	{ SDLX_DrawAnimation(SDLX_GetDisplay()->renderer, &(pellet)); }
 }

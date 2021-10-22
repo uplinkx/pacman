@@ -49,7 +49,7 @@ void		realign_player(t_pacman *player);
 
 void		draw_pellets(t_map *map);
 void		fill_map(t_map *map_dest);
-void		update_map(t_level_scene *scene);
+int			update_map(t_level_scene *scene);
 
 void	*main_menu_init(t_pmContext *context, void *vp_scene);
 void	*main_menu_close(t_pmContext *context, void *vp_scene);
