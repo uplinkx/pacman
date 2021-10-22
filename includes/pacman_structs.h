@@ -20,6 +20,19 @@ struct s_level_scene;
 #define GAME_ROWS 31
 typedef char t_map[GAME_ROWS][GAME_COLS];
 
+
+typedef struct	s_text
+{
+	SDL_Color	color;
+	double		scale;
+	size_t		message_length;
+	char		*message;
+	char		*set;
+	SDLX_Sprite	sprite;
+
+	TTF_Font	*set_font;
+}				t_text;
+
 enum	ghost_state
 {
 	GM_NONE,
@@ -80,6 +93,7 @@ typedef struct	s_pmContext
 	SDL_bool	shouldQuit;
 
 	TTF_Font	*font;
+	TTF_Font	*font2;
 }				t_pmContext;
 
 typedef struct	s_level_scene
@@ -97,16 +111,6 @@ typedef struct	s_level_scene
 	SDL_bool	pause;
 	SDL_bool	clone;
 
+	t_text		ready;
+
 }				t_level_scene;
-
-typedef struct	s_text
-{
-	SDL_Color	color;
-	double		scale;
-	size_t		message_length;
-	char		*message;
-	char		*set;
-	SDLX_Sprite	sprite;
-
-	TTF_Font	*set_font;
-}				t_text;

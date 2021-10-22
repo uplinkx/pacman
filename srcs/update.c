@@ -41,15 +41,6 @@ void	update_map(t_level_scene *scene)
 		scene->fright_ticks = 70;
 	}
 
-	scene->clone |= g_GameInput.GameInput.button_B;
-
-	if (scene->map[p_y][p_x] == '.' && scene->clone)
-	{
-		scene->map[p_y][p_x] = ' ';
-		// if (SDLX_XboxController_link(0) != NULL)
-		// 	SDL_GameControllerRumble(SDLX_XboxController_link(0), 0x0100, 0xFF00, 30);
-	}
-
 	if (scene->fright_ticks > 0)
 		scene->fright_ticks--;
 }

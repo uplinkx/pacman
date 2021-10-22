@@ -28,7 +28,6 @@ SDLX_iMap	*pacman_key_map(size_t *size)
 		(SDLX_iMap){&BMAP(button_DPAD_DOWN),	1, SDL_SCANCODE_S},
 
 		(SDLX_iMap){&BMAP(button_START),	1, SDL_SCANCODE_R},
-		(SDLX_iMap){&BMAP(button_B),		1, SDL_SCANCODE_TAB},
 	};
 
 	*size = sizeof(key_map) / sizeof(*key_map);
@@ -46,10 +45,38 @@ SDLX_iMap	*pacman_pad_map(size_t *size)
 
 		(SDLX_iMap){&BMAP(button_START),	1, SDL_CONTROLLER_BUTTON_START},
 		(SDLX_iMap){&BMAP(button_GUIDE),	1, SDL_CONTROLLER_BUTTON_BACK},
-
-		(SDLX_iMap){&BMAP(button_B),	1, SDL_CONTROLLER_BUTTON_B},
 	};
 
 	*size = sizeof(key_map) / sizeof(*key_map);
 	return (&key_map[0]);
+}
+
+void	catch_gesture(void)
+{
+	int		dx, dy;
+	double	dist;
+	double	angle;
+	int		deg;
+
+	dx = g_GameInput.GameInput.primary_delta.x;
+	dy = g_GameInput.GameInput.primary_delta.y;
+	dist = SDL_sqrt(dx * dx + dy * dy);
+
+	if (dist > 40 && g_GameInput.GameInput.button_primleft)
+	{
+		angle = SDL_atan2(dx, dy);
+		deg = SDLX_Radian_to_Degree(angle) + 360 + 45;
+		deg %= 360;
+
+		// SDL_Log("%d", deg);
+		if (deg < 90)
+			g_GameInput.GameInput.button_DPAD_LEFT |= 2;
+		else if (deg < 180)
+			g_GameInput.GameInput.button_DPAD_DOWN |= 2;
+		else if (deg < 270)
+			g_GameInput.GameInput.button_DPAD_RIGHT |= 2;
+		else
+			g_GameInput.GameInput.button_DPAD_UP |= 2;
+
+	}
 }

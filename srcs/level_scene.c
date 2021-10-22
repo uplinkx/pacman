@@ -37,6 +37,8 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 	scene->pause = SDL_FALSE;
 	scene->clone = SDL_FALSE;
 
+	create_text(&(scene->ready), 0xFFFF0b00, (SDL_Rect){0, 132, 16, 16}, "READY!", .14, context->font2);
+
 	(void)vp_scene;
 	return (NULL);
 }
@@ -53,6 +55,7 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 	t_level_scene	*scene;
 
 	scene = vp_scene;
+	catch_gesture();
 	if (g_GameInput.GameInput.button_GUIDE)
 	{
 		SDL_Log("Pressed");
@@ -71,7 +74,7 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 	if (g_GameInput.GameInput.button_START)
 		context->shouldChange = SDL_TRUE;
 
-	if (scene->pause == SDL_FALSE)
+	if (scene->pause == SDL_FALSE && scene->ticks > 50)
 	{
 		update_ghost(scene, &(scene->blinky));
 		update_ghost(scene, &(scene->pinky));
@@ -82,6 +85,18 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 
 		update_map(scene);
 	}
+	else
+	{
+		scene->ready.sprite._dst.x = (224 - scene->ready.sprite._dst.w) / 2;
+		if (scene->ticks >= 20)
+			change_message(&(scene->ready), "3", SDL_FALSE);
+		if (scene->ticks >= 30)
+			change_message(&(scene->ready), "2", SDL_FALSE);
+		if (scene->ticks >= 40)
+			change_message(&(scene->ready), "1", SDL_FALSE);
+		SDLX_RenderQueue_Add(NULL, &(scene->ready.sprite));
+	}
+
 	draw_pellets(&(scene->map));
 	scene->ticks++;
 

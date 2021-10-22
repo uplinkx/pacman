@@ -31,6 +31,7 @@ void	pacman_initalize(t_pmContext *gContext)
 
 	TTF_Init();
 	gContext->font = TTF_OpenFont(ASSETS"pixel_font.ttf", 150);
+	gContext->font2 = TTF_OpenFont(ASSETS"yoster-island.regular.ttf", 120);
 
 	g_GameInput.key_mapper.map_arr = pacman_key_map(&(g_GameInput.key_mapper.amount));
 	g_GameInput.pad_mapper.map_arr = pacman_pad_map(&(g_GameInput.pad_mapper.amount));
@@ -63,8 +64,6 @@ void	main_loop(void *v_cxt)
 		SDLX_ScreenReset(SDLX_GetDisplay()->renderer, NULL);
 	}
 }
-
-#include <stdio.h>
 
 int	main(void)
 {
