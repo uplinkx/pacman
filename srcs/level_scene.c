@@ -145,9 +145,9 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 	}
 	else if (scene->ticks < 60)
 	{
-		if (scene->ticks >= 20)			{ change_message(&(scene->ready), "3", SDL_FALSE); }
-		else if (scene->ticks >= 35)	{ change_message(&(scene->ready), "2", SDL_FALSE); }
-		else if (scene->ticks >= 50)	{ change_message(&(scene->ready), "1", SDL_FALSE); }
+		if (scene->ticks >= 20)	{ change_message(&(scene->ready), "3", SDL_FALSE); }
+		if (scene->ticks >= 35)	{ change_message(&(scene->ready), "2", SDL_FALSE); }
+		if (scene->ticks >= 50)	{ change_message(&(scene->ready), "1", SDL_FALSE); }
 		scene->ready.sprite._dst.x = (224 - scene->ready.sprite._dst.w) / 2;
 		SDLX_RenderQueue_Add(NULL, &(scene->ready.sprite));
 	}

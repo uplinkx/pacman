@@ -61,9 +61,9 @@ void	catch_gesture(void)
 
 	dx = g_GameInput.GameInput.primary_delta.x;
 	dy = g_GameInput.GameInput.primary_delta.y;
-	dist = SDL_sqrt(dx * dx + dy * dy);
+	dist = dx * dx + dy * dy;
 
-	if (g_GameInput.GameInput.button_primleft)
+	if (dist > (20 * 20) && g_GameInput.GameInput.button_primleft)
 	{
 		angle = SDL_atan2(dx, dy);
 		deg = SDLX_Radian_to_Degree(angle) + 360 + 45;
