@@ -19,7 +19,6 @@
 
 void	pacman_initalize(t_pmContext *gContext)
 {
-	gContext->init_fn = level_init;
 	gContext->init_fn = main_menu_init;
 	gContext->update_fn = NULL;
 	gContext->close_fn = NULL;
@@ -88,5 +87,8 @@ int	main(void)
 	while (gContext.shouldQuit == SDL_FALSE)
 		main_loop(&(gContext));
 #endif
+
+	TTF_CloseFont(gContext.font2);
+	TTF_CloseFont(gContext.font);
 	return (EXIT_SUCCESS);
 }

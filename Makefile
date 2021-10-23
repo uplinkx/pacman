@@ -38,7 +38,6 @@ SDLX_NAMES = 			\
 # List of all the source files.
 SRC_NAMES = \
 	$(addprefix $(SDLX_DIR), $(SDLX_NAMES))	\
-	background \
 	extra_texture \
 	ghost_sprite \
 	ghost \

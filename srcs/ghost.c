@@ -13,7 +13,7 @@
 
 #include "pacman.h"
 
-void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *))
+void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *), t_map *map)
 {
 	dest->ghost = ghost;
 	fetch_GhostSpriteInfo(&(dest->sprite.sprite_data), ghost);
@@ -29,6 +29,8 @@ void	instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_
 
 	dest->mode = GM_CHASE;
 	dest->ghost_target = fn;
+
+	dest->map = map;
 }
 
 void	realign_ghost(t_ghost *ghost)

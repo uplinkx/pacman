@@ -23,7 +23,7 @@ typedef struct	s_main_menu_scene
 	int			ticks;
 }				t_main_menu_scene;
 
-void	*main_menu_init(t_pmContext *context, void *vp_scene)
+void	*main_menu_init(t_pmContext *context, SDL_UNUSED void *vp_scene)
 {
 	t_main_menu_scene	*scene;
 
@@ -32,8 +32,11 @@ void	*main_menu_init(t_pmContext *context, void *vp_scene)
 	create_text(&(scene->start), 0xFFFF0b00, (SDL_Rect){0, 220, 0, 0}, "START", .15, context->font);
 	create_text(&(scene->start_h), 0x444FFF00, (SDL_Rect){0, 220, 0, 0}, "START", .15, context->font);
 
+	scene->start.sprite._dst.x = (224 - scene->start.sprite._dst.w) / 2; /* center for button's trigger box */
+
 	SDLX_Button_Init(&(scene->start_b), NULL, 0, (SDL_Rect){0, 0, 0, 0}, NULL);
 	scene->start_b.trigger_fn = button_trigger_start_scene_switch;
+	scene->start_b.trigger_box = scene->start.sprite._dst;
 	scene->start_b.isGloballyActive = SDL_TRUE;
 	scene->start_b.sprite.sprite_data = NULL;
 	scene->start_b.meta1 = level_init;
@@ -44,34 +47,47 @@ void	*main_menu_init(t_pmContext *context, void *vp_scene)
 
 	scene->ticks = 0;
 
-	(void)vp_scene;
 	return (NULL);
 }
 
-void	*main_menu_close(t_pmContext *context, void *vp_scene)
+void	*main_menu_close(SDL_UNUSED t_pmContext *context, void *vp_scene)
 {
-	(void)context;
-	(void)vp_scene;
+	t_main_menu_scene	*scene;
+	SDLX_Sprite			*background;
+
+	scene = vp_scene;
+
+	SDL_free(scene->start.message);
+	SDL_free(scene->start_h.message);
+
+	SDL_DestroyTexture(scene->start.sprite.sprite_data->texture);
+	SDL_DestroyTexture(scene->start_h.sprite.sprite_data->texture);
+
+	SDL_free(scene->start.sprite.sprite_data);
+	SDL_free(scene->start_h.sprite.sprite_data);
+
+	background = SDLX_ClearBackground();
+	SDL_DestroyTexture(background->sprite_data->texture);
+	SDL_free(background->sprite_data);
+	SDL_free(scene);
+
 	return (NULL);
 }
 
-void	*main_menu_update(t_pmContext *context, void *vp_scene)
+void	*main_menu_update(SDL_UNUSED t_pmContext *context, void *vp_scene)
 {
 	t_main_menu_scene	*scene;
 	double				scale;
 
 	scene = vp_scene;
 
-	// SDLX_RenderQueue_Add(NULL, &(scene->start.sprite));
-
 	scale = (SDL_sin(scene->ticks / 2) * .04) + 1;
 	scene->s_transform._dst.w = scene->start.sprite._dst.w * scale;
 	scene->s_transform._dst.h = scene->start.sprite._dst.h * scale;
 	scene->s_transform._dst.x = (224 - scene->s_transform._dst.w) / 2;
-
-	scene->start_b.trigger_box = scene->s_transform._dst;
-	SDLX_Button_Update_noDraw(&(scene->start_b));
 	scene->s_transform.sprite_data = scene->start.sprite.sprite_data;
+
+	SDLX_Button_Update_noDraw(&(scene->start_b));
 	if (scene->ticks % 10 < 7)
 	{
 		if (scene->start_b.isFocused == SDL_TRUE)
@@ -80,6 +96,6 @@ void	*main_menu_update(t_pmContext *context, void *vp_scene)
 	}
 
 	scene->ticks++;
-	(void)context;
+
 	return (NULL);
 }

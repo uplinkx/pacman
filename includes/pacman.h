@@ -33,7 +33,7 @@ void	update_text(t_text *text, size_t size);
 SDLX_iMap	*pacman_key_map(size_t *size);
 SDLX_iMap	*pacman_pad_map(size_t *size);
 
-void		instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *));
+void		instance_ghost(t_ghost *dest, int ghost, int x, int y, void (*fn)(struct s_level_scene *), t_map *map);
 void		update_ghost(t_level_scene *scene, t_ghost *ghost);
 void		realign_ghost(t_ghost *ghost);
 

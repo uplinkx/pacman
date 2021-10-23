@@ -28,6 +28,7 @@ SDLX_iMap	*pacman_key_map(size_t *size)
 		(SDLX_iMap){&BMAP(button_DPAD_DOWN),	1, SDL_SCANCODE_S},
 
 		(SDLX_iMap){&BMAP(button_START),	1, SDL_SCANCODE_R},
+		(SDLX_iMap){&BMAP(button_GUIDE),	1, SDL_SCANCODE_ESCAPE},
 	};
 
 	*size = sizeof(key_map) / sizeof(*key_map);

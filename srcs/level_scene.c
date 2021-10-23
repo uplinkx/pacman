@@ -13,8 +13,9 @@
 
 #include "pacman.h"
 
-void	*level_init(t_pmContext *context, void *vp_scene)
+void	*level_init(t_pmContext *context, SDL_UNUSED void *vp_scene)
 {
+	char	buff[30];
 	t_level_scene	*scene;
 
 	scene = new_scene(sizeof(*scene), context, ASSETS"pacman_background.png", level_close, level_update);
@@ -22,14 +23,10 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 	scene->ticks = 0;
 	fill_map(&(scene->map));
 
-	instance_ghost(&(scene->blinky),	SD_BLINKY | SD_GHOST_RIGHT, 12, 11, target_blinky);
-	instance_ghost(&(scene->pinky),		SD_PINKY  | SD_GHOST_RIGHT, 12, 11, target_pinky);
-	instance_ghost(&(scene->inky),		SD_INKY   | SD_GHOST_RIGHT, 13, 11, target_inky);
-	instance_ghost(&(scene->clyde),		SD_CLYDE  | SD_GHOST_RIGHT, 15, 11, target_clyde);
-	scene->blinky.map = &(scene->map);
-	scene->pinky.map = &(scene->map);
-	scene->inky.map = &(scene->map);
-	scene->clyde.map = &(scene->map);
+	instance_ghost(&(scene->blinky),	SD_BLINKY | SD_GHOST_RIGHT, 12, 11, target_blinky, &(scene->map));
+	instance_ghost(&(scene->pinky),		SD_PINKY  | SD_GHOST_RIGHT, 12, 11, target_pinky, &(scene->map));
+	instance_ghost(&(scene->inky),		SD_INKY   | SD_GHOST_RIGHT, 13, 11, target_inky, &(scene->map));
+	instance_ghost(&(scene->clyde),		SD_CLYDE  | SD_GHOST_RIGHT, 15, 11, target_clyde, &(scene->map));
 
 	instance_player(&(scene->player), 14, 23);
 	scene->player.map = &(scene->map);
@@ -59,36 +56,57 @@ void	*level_init(t_pmContext *context, void *vp_scene)
 	create_text(&(scene->t_score), 0xFFFFFF00, (SDL_Rect){0, -2, 16, 16}, "12345678901234567890", .08, context->font);
 	create_text(&(scene->high_score), 0xFFFFFF00, (SDL_Rect){4, -2, 16, 16}, "HIGH SCORE", .08, context->font);
 
-	char	buff[30];
-
 	SDL_itoa(context->best, buff, 10);
 	create_text(&(scene->best_score), 0xFFFFFF00, (SDL_Rect){4, -2, 16, 16}, buff, .08, context->font);
 	scene->best_score.sprite._dst.x = 100 - scene->best_score.sprite._dst.w;
 
-	create_text(&(scene->play_again), 0xFFFFFF00, (SDL_Rect){0, 115 + 25, 0, 0}, "PLAY AGAIN?", .08, context->font);
+	create_text(&(scene->play_again), 0xFFFFFF00, (SDL_Rect){224 / 2, 115 + 25, 0, 0}, "PLAY AGAIN?", .08, context->font);
 	scene->play_again.sprite._dst.x = (224 - scene->play_again.sprite._dst.w) / 2;
 
 	SDLX_Button_Init(&(scene->play_again_b), NULL, 0, (SDL_Rect){0, 0, 0, 0}, NULL);
 	scene->play_again_b.trigger_fn = button_trigger_start_scene_switch;
 	scene->play_again_b.trigger_box = scene->play_again.sprite._dst;
 	scene->play_again_b.isGloballyActive = SDL_TRUE;
-	scene->play_again_b.sprite.sprite_data = NULL;
 	scene->play_again_b.meta1 = level_init;
 	scene->play_again_b.meta = context;
 
-	(void)vp_scene;
 	return (NULL);
 }
 
 void	*level_close(t_pmContext *context, void *vp_scene)
 {
 	t_level_scene	*scene;
+	SDLX_Sprite		*background;
 
 	scene = vp_scene;
 	if (context->best < scene->score)
 		context->best = scene->score;
-	(void)context;
-	(void)vp_scene;
+
+	SDL_free(scene->ready.message);
+	SDL_free(scene->t_score.message);
+	SDL_free(scene->gameover.message);
+	SDL_free(scene->high_score.message);
+	SDL_free(scene->best_score.message);
+	SDL_free(scene->play_again.message);
+
+	SDL_DestroyTexture(scene->ready.sprite.sprite_data->texture);
+	SDL_DestroyTexture(scene->t_score.sprite.sprite_data->texture);
+	SDL_DestroyTexture(scene->gameover.sprite.sprite_data->texture);
+	SDL_DestroyTexture(scene->high_score.sprite.sprite_data->texture);
+	SDL_DestroyTexture(scene->best_score.sprite.sprite_data->texture);
+	SDL_DestroyTexture(scene->play_again.sprite.sprite_data->texture);
+
+	SDL_free(scene->ready.sprite.sprite_data);
+	SDL_free(scene->t_score.sprite.sprite_data);
+	SDL_free(scene->gameover.sprite.sprite_data);
+	SDL_free(scene->high_score.sprite.sprite_data);
+	SDL_free(scene->best_score.sprite.sprite_data);
+	SDL_free(scene->play_again.sprite.sprite_data);
+
+	background = SDLX_ClearBackground();
+	SDL_DestroyTexture(background->sprite_data->texture);
+	SDL_free(background->sprite_data);
+	SDL_free(scene);
 	return (NULL);
 }
 
@@ -99,27 +117,16 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 	t_level_scene	*scene;
 
 	scene = vp_scene;
-	catch_gesture();
-	if (g_GameInput.GameInput.button_GUIDE)
-	{
-		SDL_Log("Pressed");
-		if (scene->pause == SDL_FALSE)
-		{
-			scene->pause = SDL_TRUE;
-			SDL_Delay(140);
-		}
-		else
-		{
-			scene->pause = SDL_FALSE;
-			SDL_Delay(140);
-		}
-	}
 
+	if (SDLX_GAME_PRESS(g_GameInput, g_GameInput_prev, GUIDE))
+		scene->pause ^= SDL_TRUE;
 	if (g_GameInput.GameInput.button_START)
 		context->shouldChange = SDL_TRUE;
 
 	if (scene->pause == SDL_FALSE && scene->ticks > 60 && scene->player.lives > 0)
 	{
+		catch_gesture();
+
 		update_ghost(scene, &(scene->blinky));
 		update_ghost(scene, &(scene->pinky));
 		update_ghost(scene, &(scene->inky));
@@ -135,28 +142,22 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 			SDLX_RenderQueue_Add(NULL, &(scene->lives[ix]));
 			ix++;
 		}
-
-		SDL_itoa(scene->score, buff, 10);
-		scene->t_score.set = buff;
-		update_text(&(scene->t_score), sizeof(buff));
-		scene->t_score.sprite._dst.x = 224 - scene->t_score.sprite._dst.w - 4;
-		SDLX_RenderQueue_Add(NULL, &(scene->t_score.sprite));
-
-
 	}
 	else if (scene->ticks < 60)
 	{
-		if (scene->ticks >= 20)
-			change_message(&(scene->ready), "3", SDL_FALSE);
-		if (scene->ticks >= 35)
-			change_message(&(scene->ready), "2", SDL_FALSE);
-		if (scene->ticks >= 50)
-			change_message(&(scene->ready), "1", SDL_FALSE);
+		if (scene->ticks >= 20)			{ change_message(&(scene->ready), "3", SDL_FALSE); }
+		else if (scene->ticks >= 35)	{ change_message(&(scene->ready), "2", SDL_FALSE); }
+		else if (scene->ticks >= 50)	{ change_message(&(scene->ready), "1", SDL_FALSE); }
 		scene->ready.sprite._dst.x = (224 - scene->ready.sprite._dst.w) / 2;
 		SDLX_RenderQueue_Add(NULL, &(scene->ready.sprite));
 	}
+	scene->t_score.set = buff;
+	SDL_itoa(scene->score, buff, 10);
+	update_text(&(scene->t_score), sizeof(buff));
+	scene->t_score.sprite._dst.x = 224 - scene->t_score.sprite._dst.w - 4;
 	SDLX_RenderQueue_Add(NULL, &(scene->high_score.sprite));
 	SDLX_RenderQueue_Add(NULL, &(scene->best_score.sprite));
+	SDLX_RenderQueue_Add(NULL, &(scene->t_score.sprite));
 
 	if (scene->player.dead == SDL_TRUE && scene->player.sprite.current + 1 == scene->player.sprite.sprite_data->cycle)
 	{
@@ -173,14 +174,11 @@ void	*level_update(t_pmContext *context, void *vp_scene)
 	if (scene->player.lives == 0)
 	{
 		if (scene->ticks % 10 < 7)
-			SDLX_RenderQueue_Add(NULL, &(scene->gameover.sprite));
-
-		SDLX_Button_Update_noDraw(&(scene->play_again_b));
-		if (scene->ticks % 10 < 7)
 		{
 			SDLX_RenderQueue_Add(NULL, &(scene->play_again.sprite));
+			SDLX_RenderQueue_Add(NULL, &(scene->gameover.sprite));
 		}
-
+		SDLX_Button_Update_noDraw(&(scene->play_again_b));
 	}
 
 	draw_pellets(&(scene->map));

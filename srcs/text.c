@@ -39,7 +39,6 @@ void		change_message(t_text *text, char *to, SDL_bool allocate)
 
 void		create_text(t_text *dst, int color, SDL_Rect loc, char *message, double scale, TTF_Font *font)
 {
-
 	dst->color.r = (color >> 24) & 0xFF;
 	dst->color.g = (color >> 16) & 0xFF;
 	dst->color.b = (color >>  8) & 0xFF;
